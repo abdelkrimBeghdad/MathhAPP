@@ -10,6 +10,7 @@ import ProgressView from './components/ProgressView';
 import HomePage from './components/HomePage';
 import AdminDashboard from './components/AdminDashboard';
 import AdminLogin from './components/AdminLogin';
+import ExamsSimulator from './components/ExamsSimulator';
 import { CHAPTERS } from './constants';
 
 const App: React.FC = () => {
@@ -46,6 +47,8 @@ const App: React.FC = () => {
         return <ChatBot />;
       case AppView.EXERCISES:
         return <Exercises />;
+      case AppView.EXAMS:
+        return <ExamsSimulator />;
       case AppView.ADMIN:
         return <AdminDashboard />;
       case AppView.LESSON_DETAIL:
@@ -101,6 +104,7 @@ const App: React.FC = () => {
             <div className="flex gap-4">
                <button onClick={() => setCurrentView(AppView.DASHBOARD)}>🏠</button>
                <button onClick={() => setCurrentView(AppView.CHAT)}>🤖</button>
+               <button onClick={() => setCurrentView(AppView.EXAMS)}>⏱️</button>
                <button onClick={handleAdminRequest}>🔐</button>
             </div>
           </div>

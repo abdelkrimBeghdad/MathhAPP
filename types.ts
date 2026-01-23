@@ -7,13 +7,18 @@ export enum AppView {
   PROGRESS = 'PROGRESS',
   FORMULAS = 'FORMULAS',
   LESSON_DETAIL = 'LESSON_DETAIL',
-  ADMIN = 'ADMIN'
+  ADMIN = 'ADMIN',
+  EXAMS = 'EXAMS'
 }
+
+export type YearOfStudy = '1AM' | '2AM' | '3AM' | '4AM';
+
+export type MathField = 'NUMERICAL' | 'GEOMETRIC' | 'DATA_FUNCTIONS';
 
 export type VisualizationType = 'THALES' | 'TRIGONOMETRY' | 'COORDINATES' | 'PGCD_VISUAL';
 
 export interface LessonContent {
-  id?: number;
+  id?: string;
   subtitle: string;
   explanation: string;
   visualization?: VisualizationType;
@@ -25,6 +30,8 @@ export interface LessonContent {
 
 export interface Chapter {
   id: string;
+  field: MathField;
+  segmentNumber: number; // 1 to 7
   title: string;
   icon: string;
   description: string;
@@ -37,6 +44,7 @@ export interface Message {
   text: string;
   image?: string;
   timestamp: Date;
+  audioUrl?: string;
 }
 
 export interface Exercise {
@@ -46,4 +54,29 @@ export interface Exercise {
   correctAnswer: number;
   explanation: string;
   chapterId: string;
+}
+
+export interface MockExam {
+  id: string;
+  title: string;
+  year: number;
+  duration: number; // minutes
+  questions: Exercise[];
+}
+
+export interface Student {
+  id: string;
+  firstName: string;
+  lastName: string;
+  yearOfStudy: YearOfStudy;
+  birthDate: string;
+  gender: 'male' | 'female';
+  wilaya: string;
+  schoolName: string;
+  fatherName: string;
+  fatherPhone: string;
+  points: number;
+  progress: number;
+  lastSeen: string;
+  avatar: string;
 }

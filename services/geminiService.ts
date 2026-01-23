@@ -1,5 +1,5 @@
 
-import { GoogleGenAI, Type } from "@google/genai";
+import { GoogleGenAI, Type, Modality } from "@google/genai";
 
 const SYSTEM_INSTRUCTION = `
 أنت "الأستاذ ذكي"، معلم مادة الرياضيات متخصص في منهاج السنة الرابعة متوسط بالجزائر (BEM).
@@ -13,9 +13,9 @@ const SYSTEM_INSTRUCTION = `
 6. شجع التلميذ بكلمات مثل "أحسنت"، "بطل"، "مستقبل الجزائر بين يديك".
 `;
 
+const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+
 export async function getGeminiResponse(prompt: string, imageBase64?: string) {
-  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-  
   const contents: any[] = [{ text: prompt }];
   if (imageBase64) {
     contents.push({
@@ -43,9 +43,32 @@ export async function getGeminiResponse(prompt: string, imageBase64?: string) {
   }
 }
 
+export async function generateSpeech(text: string): Promise<string | undefined> {
+  try {
+    const response = await ai.models.generateContent({
+      model: "gemini-2.5-flash-preview-tts",
+      contents: [{ parts: [{ text: `تكلم بصوت معلم حكيم ومشجع: ${text}` }] }],
+      config: {
+        responseModalities: [Modality.AUDIO],
+        speechConfig: {
+          voiceConfig: {
+            prebuiltVoiceConfig: { voiceName: 'Kore' },
+          },
+        },
+      },
+    });
+
+    const base64Audio = response.candidates?.[0]?.content?.parts?.[0]?.inlineData?.data;
+    if (base64Audio) {
+      return `data:audio/pcm;base64,${base64Audio}`;
+    }
+  } catch (error) {
+    console.error("TTS Error:", error);
+  }
+  return undefined;
+}
+
 export async function generateCustomExercise(chapterTitle: string) {
-  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-  
   try {
     const response = await ai.models.generateContent({
       model: "gemini-3-flash-preview",

@@ -1,12 +1,8 @@
 
-import { Chapter, Exercise, LessonContent } from '../types';
+import { Chapter, Exercise, LessonContent, Student } from '../types';
 
-// ملاحظة: في بيئة التطوير المحلية أو العرض، قد لا يكون السيرفر متاحاً.
 const API_BASE_URL = '/api/v1';
 
-/**
- * دالة مساعدة للتحقق من وجود السيرفر قبل محاولة الجلب
- */
 async function safeFetch(url: string, options?: RequestInit) {
   try {
     const response = await fetch(url, options);
@@ -22,48 +18,50 @@ export const apiService = {
    * جلب كافة الوحدات الدراسية
    */
   async getChapters(): Promise<Chapter[]> {
+    // Check local storage first (Admin modifications)
+    const saved = localStorage.getItem('mathdz_chapters_db');
+    if (saved) return JSON.parse(saved);
+
     const data = await safeFetch(`${API_BASE_URL}/chapters`);
     if (data) return data;
 
-    // التراجع التلقائي للبيانات المحلية
+    // Fallback to constants
     const { CHAPTERS } = await import('../constants');
     return CHAPTERS;
   },
 
   /**
-   * إنشاء وحدة دراسية جديدة (للأدمن)
+   * إضافة تلميذ جديد
    */
-  async createChapter(chapter: Partial<Chapter>): Promise<any> {
-    const result = await safeFetch(`${API_BASE_URL}/chapters`, {
+  async addStudent(student: Partial<Student>): Promise<any> {
+    const result = await safeFetch(`${API_BASE_URL}/students`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(chapter)
+      body: JSON.stringify(student)
     });
     if (result) return result;
+
+    // Local DB simulation
+    const saved = localStorage.getItem('mathdz_students_db');
+    const students = saved ? JSON.parse(saved) : [];
+    const updated = [student, ...students];
+    localStorage.setItem('mathdz_students_db', JSON.stringify(updated));
     
-    console.log('Admin: Simulated Chapter Creation', chapter);
-    return { status: 'simulated_success', data: chapter };
-  },
-
-  /**
-   * إضافة درس لوحدة دراسية (للأدمن)
-   */
-  async addLesson(chapterId: string, lesson: LessonContent): Promise<any> {
-    const result = await safeFetch(`${API_BASE_URL}/chapters/${chapterId}/lessons`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(lesson)
-    });
-    if (result) return result;
-
-    console.log('Admin: Simulated Lesson Addition', { chapterId, lesson });
-    return { status: 'simulated_success', data: lesson };
+    return { status: 'success', data: student };
   },
 
   /**
    * جلب التمارين الخاصة بوحدة معينة
    */
   async getExercises(chapterId: string): Promise<Exercise[]> {
+    // Check local storage first
+    const saved = localStorage.getItem('mathdz_exercises_db');
+    if (saved) {
+      const allEx = JSON.parse(saved) as Exercise[];
+      const filtered = allEx.filter(ex => ex.chapterId === chapterId);
+      if (filtered.length > 0) return filtered;
+    }
+
     const data = await safeFetch(`${API_BASE_URL}/exercises/${chapterId}`);
     if (data) return data;
 
@@ -72,7 +70,7 @@ export const apiService = {
   },
 
   /**
-   * مزامنة نقاط التلميذ
+   * مزامنة النقاط
    */
   async syncProgress(points: number, studentId: string = 'guest_user'): Promise<any> {
     const result = await safeFetch(`${API_BASE_URL}/progress/sync`, {
