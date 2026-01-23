@@ -11,7 +11,8 @@ import HomePage from './components/HomePage';
 import AdminDashboard from './components/AdminDashboard';
 import AdminLogin from './components/AdminLogin';
 import ExamsSimulator from './components/ExamsSimulator';
-import { CHAPTERS } from './constants';
+import InteractivePlayground from './components/InteractivePlayground';
+import Flashcards from './components/Flashcards';
 
 const App: React.FC = () => {
   const [currentView, setCurrentView] = useState<AppView>(AppView.HOME);
@@ -35,12 +36,7 @@ const App: React.FC = () => {
   const renderView = () => {
     switch (currentView) {
       case AppView.HOME:
-        return (
-          <HomePage 
-            onStart={() => setCurrentView(AppView.DASHBOARD)} 
-            onAdminClick={handleAdminRequest}
-          />
-        );
+        return <HomePage onStart={() => setCurrentView(AppView.DASHBOARD)} onAdminClick={handleAdminRequest} />;
       case AppView.DASHBOARD:
         return <Dashboard setView={setCurrentView} onSelectChapter={openLesson} />;
       case AppView.CHAT:
@@ -49,6 +45,10 @@ const App: React.FC = () => {
         return <Exercises />;
       case AppView.EXAMS:
         return <ExamsSimulator />;
+      case AppView.PLAYGROUND:
+        return <InteractivePlayground />;
+      case AppView.FLASHCARDS:
+        return <Flashcards />;
       case AppView.ADMIN:
         return <AdminDashboard />;
       case AppView.LESSON_DETAIL:
@@ -60,27 +60,6 @@ const App: React.FC = () => {
         ) : null;
       case AppView.PROGRESS:
         return <ProgressView />;
-      case AppView.FORMULAS:
-        return (
-          <div className="p-8 glass-morphism rounded-3xl">
-             <h2 className="text-2xl font-bold mb-6 flex items-center gap-2 text-right">📜 بنك القوانين والملخصات</h2>
-             <div className="space-y-4 text-right">
-                <div className="p-6 bg-white rounded-2xl shadow-sm border border-slate-100 border-r-4 border-r-indigo-500">
-                  <h3 className="font-bold text-lg mb-2">خاصية طالس</h3>
-                  <p className="text-slate-600 leading-relaxed italic">"إذا كان مستقيمان متقاطعان يقطعهما مستقيمان متوازيان، فإن نسب الأطوال في المثلثين المتشكلين متساوية..."</p>
-                  <div className="mt-4 text-indigo-600 font-mono font-bold text-center bg-indigo-50 p-3 rounded-lg">AM / AB = AN / AC = MN / BC</div>
-                </div>
-                <div className="p-6 bg-white rounded-2xl shadow-sm border border-slate-100 border-r-4 border-r-purple-500">
-                  <h3 className="font-bold text-lg mb-2">المتطابقات الشهيرة</h3>
-                  <ul className="space-y-2 font-mono font-bold text-indigo-600">
-                    <li>(a + b)² = a² + 2ab + b²</li>
-                    <li>(a - b)² = a² - 2ab + b²</li>
-                    <li>(a - b)(a + b) = a² - b²</li>
-                  </ul>
-                </div>
-             </div>
-          </div>
-        );
       default:
         return <Dashboard setView={setCurrentView} onSelectChapter={openLesson} />;
     }
@@ -89,49 +68,16 @@ const App: React.FC = () => {
   const showSidebar = currentView !== AppView.HOME;
 
   return (
-    <div className="min-h-screen flex bg-slate-50">
-      {showSidebar && (
-        <Sidebar 
-          currentView={currentView} 
-          setView={(view) => view === AppView.ADMIN ? handleAdminRequest() : setCurrentView(view)} 
-        />
-      )}
-      
+    <div className="min-h-screen flex bg-slate-50 font-['Tajawal']">
+      {showSidebar && <Sidebar currentView={currentView} setView={setCurrentView} />}
       <main className={`flex-1 ${showSidebar ? 'p-4 md:p-10 lg:p-14 overflow-y-auto max-w-[1400px] mx-auto' : ''}`}>
-        {showSidebar && (
-          <div className="md:hidden flex items-center justify-between mb-8 p-4 glass-morphism rounded-2xl shadow-sm">
-            <h1 className="text-xl font-black text-indigo-600">MathDz</h1>
-            <div className="flex gap-4">
-               <button onClick={() => setCurrentView(AppView.DASHBOARD)}>🏠</button>
-               <button onClick={() => setCurrentView(AppView.CHAT)}>🤖</button>
-               <button onClick={() => setCurrentView(AppView.EXAMS)}>⏱️</button>
-               <button onClick={handleAdminRequest}>🔐</button>
-            </div>
-          </div>
-        )}
-
         {renderView()}
       </main>
-
-      {/* Admin Login Modal */}
       {showAdminLogin && (
         <AdminLogin 
-          onLoginSuccess={() => {
-            setIsAdminAuthenticated(true);
-            setShowAdminLogin(false);
-            setCurrentView(AppView.ADMIN);
-          }}
+          onLoginSuccess={() => { setIsAdminAuthenticated(true); setShowAdminLogin(false); setCurrentView(AppView.ADMIN); }}
           onCancel={() => setShowAdminLogin(false)}
         />
-      )}
-
-      {showSidebar && (
-        <button 
-          onClick={() => setCurrentView(AppView.CHAT)}
-          className="md:hidden fixed bottom-6 left-6 w-16 h-16 bg-indigo-600 text-white rounded-full shadow-2xl flex items-center justify-center text-3xl z-50 hover:scale-110 transition-transform active:scale-95"
-        >
-          🤖
-        </button>
       )}
     </div>
   );

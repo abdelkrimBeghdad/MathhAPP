@@ -9,12 +9,12 @@ interface SidebarProps {
 
 const Sidebar: React.FC<SidebarProps> = ({ currentView, setView }) => {
   const menuItems = [
-    { id: AppView.DASHBOARD, label: 'الرئيسية', icon: '🏠' },
+    { id: AppView.DASHBOARD, label: 'خريطة الرحلة', icon: '🗺️' },
     { id: AppView.CHAT, label: 'الأستاذ ذكي', icon: '🤖' },
+    { id: AppView.PLAYGROUND, label: 'المختبر الهندسي', icon: '🌀' },
+    { id: AppView.FLASHCARDS, label: 'تحدي البطاقات', icon: '🃏' },
     { id: AppView.EXAMS, label: 'محاكي BEM', icon: '⏱️' },
-    { id: AppView.EXERCISES, label: 'تمارين تفاعلية', icon: '📝' },
-    { id: AppView.FORMULAS, label: 'بنك القوانين', icon: '📜' },
-    { id: AppView.PROGRESS, label: 'مستواي التعليمي', icon: '📊' },
+    { id: AppView.PROGRESS, label: 'إحصائياتي', icon: '📊' },
   ];
 
   return (
@@ -25,19 +25,34 @@ const Sidebar: React.FC<SidebarProps> = ({ currentView, setView }) => {
            <h1 className="text-xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">
             MathDz
           </h1>
-          <span className="text-emerald-500 animate-pulse text-[10px]">LIVE</span>
         </div>
-        <p className="text-[10px] text-slate-400 font-bold text-center tracking-tighter">BEM 2024 PREP</p>
+        <p className="text-[10px] text-slate-400 font-black text-center tracking-widest">v2.0 GAMIFIED</p>
       </div>
 
-      <nav className="flex-1 px-4 space-y-2">
+      {/* Hero Avatar Section */}
+      <div className="px-6 mb-8 text-center">
+         <div className="relative inline-block group cursor-pointer" onClick={() => setView(AppView.PROGRESS)}>
+            <div className="w-20 h-20 bg-gradient-to-tr from-indigo-500 to-purple-500 rounded-full p-1 shadow-xl">
+               <div className="w-full h-full bg-white rounded-full flex items-center justify-center text-4xl overflow-hidden">
+                  🧔‍♂️
+               </div>
+            </div>
+            <div className="absolute -bottom-1 -right-1 w-8 h-8 bg-emerald-500 border-4 border-white rounded-full flex items-center justify-center text-[10px] text-white font-black">
+               Lvl 5
+            </div>
+         </div>
+         <h4 className="mt-4 font-black text-slate-800 text-sm">أمين المتفوق</h4>
+         <p className="text-[10px] text-indigo-600 font-bold uppercase tracking-tighter bg-indigo-50 inline-block px-3 py-1 rounded-full mt-1">صياد الكسور 🎯</p>
+      </div>
+
+      <nav className="flex-1 px-4 space-y-2 overflow-y-auto">
         {menuItems.map((item) => (
           <button
             key={item.id}
             onClick={() => setView(item.id)}
-            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 ${
+            className={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl transition-all duration-300 ${
               currentView === item.id
-                ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-200 translate-x-1'
+                ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-100'
                 : 'text-slate-600 hover:bg-slate-100 hover:text-indigo-600'
             }`}
           >
@@ -48,26 +63,14 @@ const Sidebar: React.FC<SidebarProps> = ({ currentView, setView }) => {
       </nav>
 
       <div className="p-4 space-y-2">
-        <button
-          onClick={() => setView(AppView.ADMIN)}
-          className={`w-full flex items-center gap-3 px-4 py-2 rounded-xl text-[10px] transition-all border border-transparent ${
-            currentView === AppView.ADMIN ? 'bg-slate-900 text-white' : 'text-slate-400 hover:border-slate-200'
-          }`}
-        >
-          <span>🔐</span>
-          <span className="font-black uppercase tracking-widest">الإدارة</span>
-        </button>
-
-        <div className="bg-gradient-to-br from-indigo-500 to-purple-600 p-4 rounded-2xl shadow-lg relative overflow-hidden group">
-          <div className="absolute top-0 right-0 w-20 h-20 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2"></div>
+        <div className="bg-slate-900 p-4 rounded-2xl shadow-lg relative overflow-hidden group">
           <div className="relative z-10">
-             <p className="text-[10px] text-indigo-100 font-black mb-1">نقاطك الحالية</p>
-             <div className="flex items-end gap-1 mb-2">
-                <span className="text-2xl font-black text-white">1250</span>
-                <span className="text-[10px] text-white/60 font-bold pb-1">XP</span>
+             <div className="flex justify-between items-end mb-2">
+                <span className="text-[10px] text-indigo-300 font-black uppercase">التقدم للمستوى 6</span>
+                <span className="text-[10px] text-white font-black">1250/1500 XP</span>
              </div>
-             <div className="w-full bg-black/20 h-1.5 rounded-full overflow-hidden">
-               <div className="bg-white h-full w-3/4 transition-all duration-1000"></div>
+             <div className="w-full bg-white/10 h-2 rounded-full overflow-hidden">
+               <div className="bg-gradient-to-r from-indigo-400 to-purple-400 h-full w-[83%] transition-all duration-1000"></div>
              </div>
           </div>
         </div>

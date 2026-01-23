@@ -11,113 +11,17 @@
       body {
         font-family: 'Tajawal', sans-serif;
         background-color: #f8fafc;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
+        scroll-behavior: smooth;
       }
+      .preserve-3d { transform-style: preserve-3d; }
+      .backface-hidden { backface-visibility: hidden; }
       .glass-morphism {
         background: rgba(255, 255, 255, 0.8);
         backdrop-filter: blur(12px);
         -webkit-backdrop-filter: blur(12px);
         border: 1px solid rgba(255, 255, 255, 0.3);
       }
-      
-      @keyframes shake {
-        0%, 100% { transform: translateX(0); }
-        25% { transform: translateX(-5px); }
-        75% { transform: translateX(5px); }
-      }
-      .animate-shake {
-        animation: shake 0.2s ease-in-out 0s 2;
-      }
-
-      .math-fraction {
-        display: inline-flex;
-        flex-direction: column;
-        vertical-align: middle;
-        align-items: center;
-        line-height: 1;
-        padding: 0 0.1em;
-        margin: 0 0.25em;
-        position: relative;
-      }
-      
-      .math-fraction .num {
-        display: block;
-        padding: 0 0.15em 0.15em 0.15em;
-        font-size: 0.9em;
-        font-weight: 700;
-        text-align: center;
-        width: 100%;
-      }
-      
-      .math-fraction .frac-line {
-        width: 100%;
-        height: 1.5px;
-        background-color: currentColor;
-        margin: 0;
-        border: none;
-        flex-shrink: 0;
-      }
-
-      .math-fraction .den {
-        display: block;
-        padding: 0.15em 0.15em 0 0.15em;
-        font-size: 0.9em;
-        font-weight: 700;
-        text-align: center;
-        width: 100%;
-      }
-
-      .math-root {
-        display: inline-flex;
-        align-items: flex-start;
-        vertical-align: middle;
-        margin: 0 0.1em;
-        position: relative;
-      }
-      
-      .math-root-tick {
-        width: 0.85em;
-        height: 1.6em;
-        flex-shrink: 0;
-        margin-left: -1px;
-        transform: translateY(0.05em);
-      }
-
-      .math-radicand {
-        border-top: 2px solid currentColor;
-        padding: 0.2em 0.2em 0 0.2em;
-        margin-top: 0.22em;
-        line-height: 1.2;
-        font-size: 0.95em;
-        font-weight: 800;
-        display: inline-block;
-        white-space: nowrap;
-      }
-
-      .prose p {
-        line-height: 2.8; 
-        margin-bottom: 2rem;
-        color: #1e293b;
-        font-weight: 500;
-        font-size: 1.15rem;
-      }
-
-      .math-gradient {
-        background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
-      }
-
-      .card-hover {
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      }
-      .card-hover:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.05);
-      }
-
-      ::-webkit-scrollbar { width: 6px; }
-      ::-webkit-scrollbar-track { background: #f8fafc; }
-      ::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
+      .math-gradient { background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); }
     </style>
   <script type="importmap">
 {

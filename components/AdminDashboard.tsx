@@ -246,7 +246,7 @@ const AdminDashboard: React.FC = () => {
                            </div>
                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                               {ch.detailedContent.map((les) => (
-                                <div key={les.id} className="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm flex justify-between items-center group/item hover:border-indigo-200 transition-all">
+                                <div key={les.id} className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex justify-between items-center group/item hover:border-indigo-200 transition-all">
                                    <div className="flex items-center gap-4">
                                       <span className="text-xl">📖</span>
                                       <span className="font-black text-slate-700 text-sm leading-tight">{les.subtitle}</span>
@@ -279,7 +279,7 @@ const AdminDashboard: React.FC = () => {
                  <thead>
                     <tr className="bg-slate-50 text-slate-400 text-[10px] font-black uppercase tracking-widest">
                        <th className="p-8">معلومات التلميذ</th>
-                       <th className="p-8">المؤسسة والولاية</th>
+                       <th className="p-8">المستوى والولاية</th>
                        <th className="p-8 text-center">الرصيد XP</th>
                        <th className="p-8">الحالة</th>
                     </tr>
@@ -288,15 +288,18 @@ const AdminDashboard: React.FC = () => {
                     {students.map(st => (
                       <tr key={st.id} className="hover:bg-slate-50/50 transition-colors">
                          <td className="p-8">
-                            <p className="font-black text-slate-800 text-lg">{st.firstName} {st.lastName}</p>
-                            <span className="text-[10px] font-black text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded">4AM</span>
+                            {/* Fixed: lastName does not exist on Student, using only firstName */}
+                            <p className="font-black text-slate-800 text-lg">{st.firstName}</p>
+                            <span className="text-[10px] font-black text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded">السنة {st.level} متوسط</span>
                          </td>
                          <td className="p-8">
-                            <p className="font-bold text-slate-600">{st.schoolName}</p>
-                            <span className="text-xs text-slate-400 font-bold">ولاية رقم {st.wilaya}</span>
+                            {/* Fixed: schoolName does not exist on Student, using title or placeholder */}
+                            <p className="font-bold text-slate-600">{st.title || 'طالب متفوق'}</p>
+                            <span className="text-xs text-slate-400 font-bold">ولاية: {st.wilaya}</span>
                          </td>
                          <td className="p-8 text-center">
-                            <span className="font-black text-emerald-600 bg-emerald-50 px-5 py-2 rounded-2xl border border-emerald-100">{st.points} XP</span>
+                            {/* Fixed: points does not exist on Student, using xp */}
+                            <span className="font-black text-emerald-600 bg-emerald-50 px-5 py-2 rounded-2xl border border-emerald-100">{st.xp} XP</span>
                          </td>
                          <td className="p-8">
                             <div className="flex items-center gap-2">

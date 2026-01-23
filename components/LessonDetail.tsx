@@ -12,27 +12,6 @@ interface LessonDetailProps {
 const LessonDetail: React.FC<LessonDetailProps> = ({ chapter, onBack }) => {
   const [activeSection, setActiveSection] = useState(0);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      const sections = document.querySelectorAll('.lesson-section');
-      sections.forEach((section, index) => {
-        const rect = section.getBoundingClientRect();
-        if (rect.top >= 0 && rect.top <= 300) {
-          setActiveSection(index);
-        }
-      });
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  const scrollToSection = (index: number) => {
-    const element = document.getElementById(`section-${index}`);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-  };
-
   return (
     <div className="min-h-screen bg-slate-50/50 pb-20">
       {/* Hero Header */}
@@ -63,20 +42,13 @@ const LessonDetail: React.FC<LessonDetailProps> = ({ chapter, onBack }) => {
         <aside className="lg:col-span-3 hidden lg:block">
           <div className="sticky top-24 space-y-6">
             <div className="bg-white rounded-[2.5rem] p-8 shadow-xl border border-slate-100">
-              <h3 className="font-black text-slate-800 mb-6 text-lg border-b pb-4">📍 مسار الموارد المعرفية</h3>
+              <h3 className="font-black text-slate-800 mb-6 text-lg border-b pb-4">📍 مسار الموارد</h3>
               <div className="space-y-1 relative">
-                <div className="absolute right-[11px] top-4 bottom-4 w-0.5 bg-slate-100"></div>
                 {chapter.detailedContent.map((section, idx) => (
                   <button
                     key={idx}
-                    onClick={() => scrollToSection(idx)}
-                    className={`w-full text-right py-4 pr-8 relative text-sm transition-all flex items-center group ${
-                      activeSection === idx ? 'text-indigo-600 font-black' : 'text-slate-400 font-bold'
-                    }`}
+                    className={`w-full text-right py-4 pr-4 text-sm font-bold transition-all border-r-4 ${activeSection === idx ? 'text-indigo-600 border-indigo-600 bg-indigo-50/50 rounded-l-xl' : 'text-slate-400 border-slate-100'}`}
                   >
-                    <div className={`absolute right-0 w-6 h-6 rounded-full border-4 border-white shadow-sm z-10 transition-colors ${
-                      activeSection === idx ? 'bg-indigo-600' : 'bg-slate-200 group-hover:bg-indigo-200'
-                    }`}></div>
                     {section.subtitle}
                   </button>
                 ))}
@@ -87,71 +59,69 @@ const LessonDetail: React.FC<LessonDetailProps> = ({ chapter, onBack }) => {
 
         <div className="lg:col-span-9 space-y-16">
           {chapter.detailedContent.map((section, idx) => (
-            <section key={idx} id={`section-${idx}`} className="lesson-section scroll-mt-24">
+            <section key={idx} className="lesson-section scroll-mt-24">
               <div className="bg-white rounded-[3rem] shadow-2xl border border-slate-100 overflow-hidden">
                 <div className="p-8 md:p-10 flex items-start justify-between border-b border-slate-50 bg-slate-50/50">
                   <div className="text-right space-y-2">
                     <span className={`inline-block px-4 py-1.5 rounded-full text-[10px] font-black text-white uppercase shadow-lg ${chapter.color}`}>
-                      المورد المعرفي رقم {idx + 1}
+                      المورد رقم {idx + 1}
                     </span>
                     <h3 className="text-2xl md:text-3xl font-black text-slate-800">{section.subtitle}</h3>
                   </div>
                 </div>
 
                 <div className="p-8 md:p-12 space-y-12 text-right">
-                  {/* Explanation Section */}
-                  <div className="space-y-6">
-                     <div className="flex items-center gap-3 justify-end text-indigo-600">
-                        <h4 className="font-black text-xl">💡 شرح المورد (حوصلة)</h4>
-                        <span className="text-2xl">📘</span>
-                     </div>
-                     <div className="bg-slate-50 p-8 rounded-[2rem] border-r-8 border-indigo-500 shadow-inner">
-                        <MathText text={section.explanation} className="prose max-w-none text-slate-700 leading-loose text-lg font-medium" />
-                     </div>
+                  {/* Explanation */}
+                  <div className="bg-slate-50 p-8 rounded-[2rem] border-r-8 border-indigo-500">
+                    <MathText text={section.explanation} className="prose max-w-none text-slate-700 text-lg" />
                   </div>
+
+                  {/* Common Mistakes (NEW) */}
+                  {section.commonMistakes && section.commonMistakes.length > 0 && (
+                    <div className="space-y-6">
+                       <div className="flex items-center gap-3 justify-end text-rose-500">
+                          <h4 className="font-black text-xl">⚠️ احذر الفخ (أخطاء شائعة)</h4>
+                          <span className="text-2xl">🚧</span>
+                       </div>
+                       {section.commonMistakes.map((mistake, mIdx) => (
+                         <div key={mIdx} className="bg-rose-50 p-8 rounded-[2rem] border border-rose-100 space-y-4">
+                            <div className="flex justify-between items-center border-b border-rose-200 pb-3">
+                               <span className="bg-rose-500 text-white px-4 py-1 rounded-full text-[10px] font-black uppercase">تنبيه ذكي</span>
+                               <h5 className="font-black text-rose-800">{mistake.title}</h5>
+                            </div>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                               <div className="bg-white/50 p-4 rounded-2xl">
+                                  <p className="text-xs font-black text-rose-400 mb-1">الخطأ المتكرر ❌</p>
+                                  <p className="font-bold text-slate-700">{mistake.mistake}</p>
+                               </div>
+                               <div className="bg-emerald-50 p-4 rounded-2xl">
+                                  <p className="text-xs font-black text-emerald-500 mb-1">الإصلاح الصحيح ✅</p>
+                                  <p className="font-bold text-slate-700">{mistake.correction}</p>
+                               </div>
+                            </div>
+                            <div className="bg-indigo-600 text-white p-4 rounded-2xl flex items-center gap-4">
+                               <span className="text-2xl">💡</span>
+                               <p className="text-sm font-bold">نصيحة الأستاذ: {mistake.tip}</p>
+                            </div>
+                         </div>
+                       ))}
+                    </div>
+                  )}
 
                   {section.visualization && (
                     <MathVisualizer type={section.visualization} colorClass={chapter.color} />
                   )}
 
-                  {/* Example & Solution Section */}
                   {section.example && (
-                    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4">
-                      <div className="flex items-center gap-3 justify-end text-emerald-600">
-                        <h4 className="font-black text-xl">📝 تطبيق وإعادة استثمار</h4>
-                        <span className="text-2xl">✍️</span>
-                      </div>
-                      
-                      <div className="grid grid-cols-1 gap-6">
-                        <div className="bg-white border-2 border-emerald-100 p-8 rounded-[2rem] shadow-sm relative overflow-hidden group">
-                           <div className="absolute top-0 left-0 w-2 h-full bg-emerald-500 opacity-20 group-hover:opacity-100 transition-opacity"></div>
-                           <h5 className="font-black text-emerald-700 mb-4 flex items-center gap-2 justify-end">
-                              <span>السؤال / الوضعية</span>
-                              <span className="w-2 h-2 bg-emerald-500 rounded-full"></span>
-                           </h5>
-                           <MathText text={section.example.problem} className="text-slate-800 text-xl font-bold leading-relaxed" />
-                        </div>
-
-                        <div className="bg-slate-900 p-8 rounded-[2rem] shadow-2xl relative">
-                           <div className="absolute top-4 left-6 flex gap-1.5">
-                              <span className="w-2.5 h-2.5 rounded-full bg-rose-500/50"></span>
-                              <span className="w-2.5 h-2.5 rounded-full bg-amber-500/50"></span>
-                              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500/50"></span>
-                           </div>
-                           <h5 className="font-black text-indigo-400 mb-6 flex items-center gap-2 justify-end border-b border-white/10 pb-4">
-                              <span>الحل النموذجي المقترح</span>
-                              <span className="w-2 h-2 bg-indigo-400 rounded-full"></span>
-                           </h5>
-                           <MathText text={section.example.solution} className="text-indigo-50 text-xl leading-loose font-bold" />
-                        </div>
-                      </div>
+                    <div className="bg-slate-900 p-8 rounded-[2.5rem] shadow-2xl relative">
+                       <h5 className="font-black text-indigo-400 mb-6 text-right border-b border-white/10 pb-4">مثال تطبيقي شامل</h5>
+                       <MathText text={section.example.problem} className="text-white text-xl font-bold mb-6" />
+                       <div className="bg-white/5 p-6 rounded-2xl border border-white/10">
+                          <p className="text-emerald-400 font-black mb-2">خطوات الحل:</p>
+                          <MathText text={section.example.solution} className="text-indigo-100 font-medium" />
+                       </div>
                     </div>
                   )}
-                </div>
-                
-                {/* Footer of lesson card */}
-                <div className="bg-slate-50 p-6 text-center border-t border-slate-100">
-                   <p className="text-slate-400 font-bold text-xs uppercase tracking-widest">نهاية المورد المعرفي - برافو يا بطل! 👏</p>
                 </div>
               </div>
             </section>

@@ -8,20 +8,28 @@ export enum AppView {
   FORMULAS = 'FORMULAS',
   LESSON_DETAIL = 'LESSON_DETAIL',
   ADMIN = 'ADMIN',
-  EXAMS = 'EXAMS'
+  EXAMS = 'EXAMS',
+  PLAYGROUND = 'PLAYGROUND',
+  FLASHCARDS = 'FLASHCARDS'
 }
 
 export type YearOfStudy = '1AM' | '2AM' | '3AM' | '4AM';
-
 export type MathField = 'NUMERICAL' | 'GEOMETRIC' | 'DATA_FUNCTIONS';
-
 export type VisualizationType = 'THALES' | 'TRIGONOMETRY' | 'COORDINATES' | 'PGCD_VISUAL';
+
+export interface CommonMistake {
+  title: string;
+  mistake: string;
+  correction: string;
+  tip: string;
+}
 
 export interface LessonContent {
   id?: string;
   subtitle: string;
   explanation: string;
   visualization?: VisualizationType;
+  commonMistakes?: CommonMistake[];
   example?: {
     problem: string;
     solution: string;
@@ -31,12 +39,20 @@ export interface LessonContent {
 export interface Chapter {
   id: string;
   field: MathField;
-  segmentNumber: number; // 1 to 7
+  segmentNumber: number;
   title: string;
   icon: string;
   description: string;
   color: string;
   detailedContent: LessonContent[];
+  masteryLevel?: number; // 0 to 100
+}
+
+export interface Flashcard {
+  id: string;
+  question: string;
+  answer: boolean; // True/False game
+  explanation: string;
 }
 
 export interface Message {
@@ -60,23 +76,17 @@ export interface MockExam {
   id: string;
   title: string;
   year: number;
-  duration: number; // minutes
+  duration: number;
   questions: Exercise[];
 }
 
 export interface Student {
   id: string;
   firstName: string;
-  lastName: string;
-  yearOfStudy: YearOfStudy;
-  birthDate: string;
-  gender: 'male' | 'female';
-  wilaya: string;
-  schoolName: string;
-  fatherName: string;
-  fatherPhone: string;
-  points: number;
-  progress: number;
-  lastSeen: string;
+  level: number;
+  xp: number;
+  title: string;
   avatar: string;
+  wilaya: string;
+  achievements: string[];
 }

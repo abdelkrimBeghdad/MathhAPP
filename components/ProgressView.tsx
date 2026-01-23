@@ -1,102 +1,89 @@
 
 import React from 'react';
-import { 
-  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, 
-  AreaChart, Area, Cell
-} from 'recharts';
-
-const chapterData = [
-  { name: 'PGCD', score: 85, color: '#4f46e5' },
-  { name: 'الجذور', score: 70, color: '#7c3aed' },
-  { name: 'طالس', score: 92, color: '#10b981' },
-];
+import { CHAPTERS } from '../constants';
 
 const ProgressView: React.FC = () => {
   return (
-    <div className="space-y-10 animate-in fade-in slide-in-from-bottom-6 duration-700 text-right pb-20">
+    <div className="space-y-12 animate-in fade-in duration-700 text-right pb-24">
       <header className="flex flex-col md:flex-row justify-between items-end gap-6">
-        <div className="space-y-2">
-          <h2 className="text-4xl font-black text-slate-800">تحليل الأداء الذكي 📊</h2>
-          <p className="text-slate-500 font-bold text-lg">أنت تقوم بعمل رائع! إليك كيف يراك الأستاذ ذكي.</p>
+        <div>
+          <h2 className="text-4xl font-black text-slate-800">خريطة القوة المعرفية 🗺️</h2>
+          <p className="text-slate-500 font-bold text-lg">هذا هو تمثيلك الرقمي للرياضيات، يا بطل!</p>
         </div>
-        <button className="bg-white px-8 py-4 rounded-2xl shadow-xl border border-slate-100 font-black text-indigo-600 hover:bg-indigo-50 transition-all">
-          تحميل تقرير التفوق PDF 📂
-        </button>
       </header>
 
-      {/* Wilaya Leaderboard Mini Section */}
-      <section className="bg-indigo-600 rounded-[3rem] p-10 text-white shadow-2xl relative overflow-hidden group">
-         <div className="absolute top-0 right-0 w-80 h-80 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl"></div>
-         <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div className="space-y-6">
-               <div className="inline-block bg-white/20 backdrop-blur-md px-4 py-2 rounded-xl font-black text-xs uppercase">المنافسة الوطنية 🇩🇿</div>
-               <h3 className="text-4xl font-black">ترتيب ولاية <span className="underline decoration-emerald-400">سطيف</span></h3>
-               <p className="text-indigo-100 font-bold text-lg leading-relaxed">
-                 ولايتك تحتل المركز الثاني وطنياً هذا الأسبوع! ساعد زملائك في ولايتك لتصدر القائمة والحصول على لقب "الولاية العبقرية".
-               </p>
-               <div className="flex gap-4">
-                  <div className="bg-white/10 p-4 rounded-2xl flex-1 text-center border border-white/10">
-                     <span className="block text-2xl font-black">#02</span>
-                     <span className="text-[10px] text-white/60 font-black uppercase">الترتيب الحالي</span>
-                  </div>
-                  <div className="bg-white/10 p-4 rounded-2xl flex-1 text-center border border-white/10">
-                     <span className="block text-2xl font-black">+4500</span>
-                     <span className="text-[10px] text-white/60 font-black uppercase">نقاط الأسبوع</span>
-                  </div>
-               </div>
-            </div>
-            <div className="bg-white/10 backdrop-blur-xl rounded-[2.5rem] p-8 border border-white/20 space-y-4">
-               <h4 className="font-black text-lg mb-4 text-center">أفضل تلاميذ سطيف 🏆</h4>
+      {/* Mastery Heatmap Grid */}
+      <section className="bg-white p-10 rounded-[3rem] shadow-xl border border-slate-100">
+        <h3 className="text-2xl font-black text-slate-800 mb-10 flex items-center gap-3">
+           <span className="text-indigo-600">🌡️</span> خريطة الحرارة للإتقان
+        </h3>
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">
+           {CHAPTERS.map(ch => (
+             <div key={ch.id} className="relative group">
+                <div className={`aspect-square rounded-[2rem] flex flex-col items-center justify-center p-4 transition-all duration-500 hover:scale-105 border-4 ${ch.masteryLevel! > 70 ? 'bg-emerald-50 border-emerald-100' : ch.masteryLevel! > 30 ? 'bg-amber-50 border-amber-100' : 'bg-rose-50 border-rose-100'}`}>
+                   <span className="text-4xl mb-2">{ch.icon}</span>
+                   <div className="w-full bg-black/5 h-1.5 rounded-full overflow-hidden">
+                      <div className={`h-full transition-all duration-1000 ${ch.masteryLevel! > 70 ? 'bg-emerald-500' : ch.masteryLevel! > 30 ? 'bg-amber-500' : 'bg-rose-500'}`} style={{ width: `${ch.masteryLevel}%` }}></div>
+                   </div>
+                   <span className="text-[10px] font-black mt-2 text-slate-400">المقطع {ch.segmentNumber}</span>
+                </div>
+                {/* Tooltip on hover */}
+                <div className="absolute -top-12 left-1/2 -translate-x-1/2 bg-slate-900 text-white px-4 py-2 rounded-xl text-xs font-bold opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-20 pointer-events-none">
+                   إتقان بنسبة {ch.masteryLevel}%
+                </div>
+             </div>
+           ))}
+        </div>
+      </section>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+         {/* Achievements */}
+         <div className="bg-slate-900 p-10 rounded-[3.5rem] text-white shadow-2xl relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-40 h-40 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2 blur-2xl"></div>
+            <h3 className="text-2xl font-black mb-8">خزانة الأوسمة (Achievements) 🏆</h3>
+            <div className="grid grid-cols-3 gap-6">
                {[
-                 { name: 'أمين د.', points: '450 XP', avatar: '🦁' },
-                 { name: 'لينا ب.', points: '420 XP', avatar: '✨' },
-                 { name: 'ياسين ق.', points: '390 XP', avatar: '⚡' },
-               ].map((t, i) => (
-                 <div key={i} className="flex items-center justify-between p-3 bg-white/5 rounded-2xl border border-white/5">
-                    <div className="flex items-center gap-3">
-                       <span className="text-2xl">{t.avatar}</span>
-                       <span className="font-bold">{t.name}</span>
-                    </div>
-                    <span className="font-black text-indigo-200">{t.points}</span>
+                 { icon: '🥇', label: 'أول 1000 XP', active: true },
+                 { icon: '📐', label: 'خبير طالس', active: true },
+                 { icon: '⚡', label: 'سريع الحل', active: false },
+                 { icon: '🤖', label: 'صديق ذكي', active: true },
+                 { icon: '📈', label: 'متطور دائماً', active: false },
+                 { icon: '🎓', label: 'جاهز للبيام', active: false },
+               ].map((a, i) => (
+                 <div key={i} className={`flex flex-col items-center text-center space-y-2 p-4 rounded-3xl border ${a.active ? 'bg-white/10 border-white/20' : 'bg-black/20 border-white/5 opacity-30 grayscale'}`}>
+                    <span className="text-3xl">{a.icon}</span>
+                    <span className="text-[10px] font-black uppercase tracking-tighter">{a.label}</span>
                  </div>
                ))}
             </div>
          </div>
-      </section>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
-        <div className="bg-white p-10 rounded-[3rem] shadow-xl border border-slate-100">
-          <h3 className="text-2xl font-black text-slate-800 mb-8 flex items-center gap-3">
-            <span className="text-indigo-600 text-3xl">📊</span> إتقان المحاور (%)
-          </h3>
-          <div className="h-[300px] w-full">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={chapterData} margin={{ top: 20, right: 30, left: 0, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#64748b', fontSize: 12, fontWeight: 900 }} />
-                <YAxis axisLine={false} tickLine={false} tick={{ fill: '#64748b', fontSize: 12, fontWeight: 900 }} domain={[0, 100]} />
-                <Tooltip contentStyle={{ borderRadius: '24px', border: 'none', boxShadow: '0 20px 25px -5px rgb(0 0 0 / 0.1)', fontFamily: 'Tajawal', fontWeight: 'bold' }} />
-                <Bar dataKey="score" radius={[12, 12, 12, 12]} barSize={45}>
-                  {chapterData.map((entry, index) => <Cell key={`cell-${index}`} fill={entry.color} />)}
-                </Bar>
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
-
-        <div className="bg-white p-10 rounded-[3rem] shadow-xl border border-slate-100 flex flex-col justify-center text-center space-y-8">
-           <div className="w-32 h-32 bg-indigo-50 rounded-full flex items-center justify-center text-6xl mx-auto shadow-inner border-8 border-white">🎓</div>
-           <div>
-              <h3 className="text-2xl font-black text-slate-800">لقبك الدراسي الحالي</h3>
-              <p className="text-indigo-600 text-4xl font-black mt-2">"مهندس طالس الواعد"</p>
-           </div>
-           <p className="text-slate-500 font-bold max-w-sm mx-auto">
-             لقد أتممت 90% من تمارين الهندسة بنجاح باهر. الأستاذ ذكي فخور بك جداً!
-           </p>
-           <div className="pt-4">
-              <button className="px-8 py-3 bg-slate-900 text-white rounded-2xl font-black hover:bg-indigo-600 transition-all">مشاركة الإنجاز 🚀</button>
-           </div>
-        </div>
+         {/* Knowledge Stats */}
+         <div className="bg-white p-10 rounded-[3.5rem] shadow-xl border border-slate-100">
+            <h3 className="text-2xl font-black text-slate-800 mb-8">إحصائيات "البيام" الذكية</h3>
+            <div className="space-y-6">
+               {[
+                 { label: 'الأنشطة العددية', val: 85, color: 'bg-blue-500' },
+                 { label: 'الأنشطة الهندسية', val: 42, color: 'bg-emerald-500' },
+                 { label: 'تنظيم المعطيات', val: 15, color: 'bg-amber-500' },
+               ].map((s, i) => (
+                 <div key={i} className="space-y-2">
+                    <div className="flex justify-between font-black text-xs">
+                       <span className="text-slate-400 uppercase tracking-widest">{s.label}</span>
+                       <span className="text-slate-800">{s.val}%</span>
+                    </div>
+                    <div className="w-full bg-slate-100 h-3 rounded-full overflow-hidden">
+                       <div className={`${s.color} h-full rounded-full transition-all duration-1000`} style={{ width: `${s.val}%` }}></div>
+                    </div>
+                 </div>
+               ))}
+            </div>
+            <div className="mt-10 p-6 bg-indigo-50 rounded-[2rem] border border-indigo-100">
+               <p className="text-indigo-800 text-sm font-bold leading-loose">
+                  🚀 <span className="font-black">نصيحة المنصة:</span> أنت متأخر قليلاً في الهندسة (طالس والزوايا). خصص لها 30 دقيقة غداً مع الأستاذ ذكي!
+               </p>
+            </div>
+         </div>
       </div>
     </div>
   );
