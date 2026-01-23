@@ -7,10 +7,11 @@ import ChatBot from './components/ChatBot';
 import Exercises from './components/Exercises';
 import LessonDetail from './components/LessonDetail';
 import ProgressView from './components/ProgressView';
+import HomePage from './components/HomePage';
 import { CHAPTERS } from './constants';
 
 const App: React.FC = () => {
-  const [currentView, setCurrentView] = useState<AppView>(AppView.DASHBOARD);
+  const [currentView, setCurrentView] = useState<AppView>(AppView.HOME);
   const [selectedChapter, setSelectedChapter] = useState<Chapter | null>(null);
 
   const openLesson = (chapter: Chapter) => {
@@ -20,6 +21,8 @@ const App: React.FC = () => {
 
   const renderView = () => {
     switch (currentView) {
+      case AppView.HOME:
+        return <HomePage onStart={() => setCurrentView(AppView.DASHBOARD)} />;
       case AppView.DASHBOARD:
         return <Dashboard setView={setCurrentView} onSelectChapter={openLesson} />;
       case AppView.CHAT:
@@ -61,31 +64,38 @@ const App: React.FC = () => {
     }
   };
 
+  // Check if we should show the sidebar (not for HOME or initial state if needed)
+  const showSidebar = currentView !== AppView.HOME;
+
   return (
     <div className="min-h-screen flex bg-slate-50">
-      <Sidebar currentView={currentView} setView={setCurrentView} />
+      {showSidebar && <Sidebar currentView={currentView} setView={setCurrentView} />}
       
-      <main className="flex-1 p-4 md:p-10 lg:p-14 overflow-y-auto max-w-[1400px] mx-auto">
-        {/* Mobile Header */}
-        <div className="md:hidden flex items-center justify-between mb-8 p-4 glass-morphism rounded-2xl shadow-sm">
-          <h1 className="text-xl font-black text-indigo-600">MathDz</h1>
-          <div className="flex gap-4">
-             <button onClick={() => setCurrentView(AppView.DASHBOARD)}>🏠</button>
-             <button onClick={() => setCurrentView(AppView.CHAT)}>🤖</button>
-             <button onClick={() => setCurrentView(AppView.EXERCISES)}>📝</button>
+      <main className={`flex-1 ${showSidebar ? 'p-4 md:p-10 lg:p-14 overflow-y-auto max-w-[1400px] mx-auto' : ''}`}>
+        {/* Mobile Header (Hidden on HOME) */}
+        {showSidebar && (
+          <div className="md:hidden flex items-center justify-between mb-8 p-4 glass-morphism rounded-2xl shadow-sm">
+            <h1 className="text-xl font-black text-indigo-600">MathDz</h1>
+            <div className="flex gap-4">
+               <button onClick={() => setCurrentView(AppView.DASHBOARD)}>🏠</button>
+               <button onClick={() => setCurrentView(AppView.CHAT)}>🤖</button>
+               <button onClick={() => setCurrentView(AppView.EXERCISES)}>📝</button>
+            </div>
           </div>
-        </div>
+        )}
 
         {renderView()}
       </main>
 
-      {/* Quick Action Button for Mobile Chat */}
-      <button 
-        onClick={() => setCurrentView(AppView.CHAT)}
-        className="md:hidden fixed bottom-6 left-6 w-16 h-16 bg-indigo-600 text-white rounded-full shadow-2xl flex items-center justify-center text-3xl z-50 hover:scale-110 transition-transform active:scale-95"
-      >
-        🤖
-      </button>
+      {/* Quick Action Button for Mobile Chat (Hidden on HOME) */}
+      {showSidebar && (
+        <button 
+          onClick={() => setCurrentView(AppView.CHAT)}
+          className="md:hidden fixed bottom-6 left-6 w-16 h-16 bg-indigo-600 text-white rounded-full shadow-2xl flex items-center justify-center text-3xl z-50 hover:scale-110 transition-transform active:scale-95"
+        >
+          🤖
+        </button>
+      )}
     </div>
   );
 };

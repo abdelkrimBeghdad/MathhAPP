@@ -1,5 +1,6 @@
 
 export enum AppView {
+  HOME = 'HOME',
   DASHBOARD = 'DASHBOARD',
   CHAT = 'CHAT',
   EXERCISES = 'EXERCISES',
