@@ -8,27 +8,46 @@ import Exercises from './components/Exercises';
 import LessonDetail from './components/LessonDetail';
 import ProgressView from './components/ProgressView';
 import HomePage from './components/HomePage';
+import AdminDashboard from './components/AdminDashboard';
+import AdminLogin from './components/AdminLogin';
 import { CHAPTERS } from './constants';
 
 const App: React.FC = () => {
   const [currentView, setCurrentView] = useState<AppView>(AppView.HOME);
   const [selectedChapter, setSelectedChapter] = useState<Chapter | null>(null);
+  const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false);
+  const [showAdminLogin, setShowAdminLogin] = useState(false);
 
   const openLesson = (chapter: Chapter) => {
     setSelectedChapter(chapter);
     setCurrentView(AppView.LESSON_DETAIL);
   };
 
+  const handleAdminRequest = () => {
+    if (isAdminAuthenticated) {
+      setCurrentView(AppView.ADMIN);
+    } else {
+      setShowAdminLogin(true);
+    }
+  };
+
   const renderView = () => {
     switch (currentView) {
       case AppView.HOME:
-        return <HomePage onStart={() => setCurrentView(AppView.DASHBOARD)} />;
+        return (
+          <HomePage 
+            onStart={() => setCurrentView(AppView.DASHBOARD)} 
+            onAdminClick={handleAdminRequest}
+          />
+        );
       case AppView.DASHBOARD:
         return <Dashboard setView={setCurrentView} onSelectChapter={openLesson} />;
       case AppView.CHAT:
         return <ChatBot />;
       case AppView.EXERCISES:
         return <Exercises />;
+      case AppView.ADMIN:
+        return <AdminDashboard />;
       case AppView.LESSON_DETAIL:
         return selectedChapter ? (
           <LessonDetail 
@@ -41,8 +60,8 @@ const App: React.FC = () => {
       case AppView.FORMULAS:
         return (
           <div className="p-8 glass-morphism rounded-3xl">
-             <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">📜 بنك القوانين والملخصات</h2>
-             <div className="space-y-4">
+             <h2 className="text-2xl font-bold mb-6 flex items-center gap-2 text-right">📜 بنك القوانين والملخصات</h2>
+             <div className="space-y-4 text-right">
                 <div className="p-6 bg-white rounded-2xl shadow-sm border border-slate-100 border-r-4 border-r-indigo-500">
                   <h3 className="font-bold text-lg mb-2">خاصية طالس</h3>
                   <p className="text-slate-600 leading-relaxed italic">"إذا كان مستقيمان متقاطعان يقطعهما مستقيمان متوازيان، فإن نسب الأطوال في المثلثين المتشكلين متساوية..."</p>
@@ -64,22 +83,25 @@ const App: React.FC = () => {
     }
   };
 
-  // Check if we should show the sidebar (not for HOME or initial state if needed)
   const showSidebar = currentView !== AppView.HOME;
 
   return (
     <div className="min-h-screen flex bg-slate-50">
-      {showSidebar && <Sidebar currentView={currentView} setView={setCurrentView} />}
+      {showSidebar && (
+        <Sidebar 
+          currentView={currentView} 
+          setView={(view) => view === AppView.ADMIN ? handleAdminRequest() : setCurrentView(view)} 
+        />
+      )}
       
       <main className={`flex-1 ${showSidebar ? 'p-4 md:p-10 lg:p-14 overflow-y-auto max-w-[1400px] mx-auto' : ''}`}>
-        {/* Mobile Header (Hidden on HOME) */}
         {showSidebar && (
           <div className="md:hidden flex items-center justify-between mb-8 p-4 glass-morphism rounded-2xl shadow-sm">
             <h1 className="text-xl font-black text-indigo-600">MathDz</h1>
             <div className="flex gap-4">
                <button onClick={() => setCurrentView(AppView.DASHBOARD)}>🏠</button>
                <button onClick={() => setCurrentView(AppView.CHAT)}>🤖</button>
-               <button onClick={() => setCurrentView(AppView.EXERCISES)}>📝</button>
+               <button onClick={handleAdminRequest}>🔐</button>
             </div>
           </div>
         )}
@@ -87,7 +109,18 @@ const App: React.FC = () => {
         {renderView()}
       </main>
 
-      {/* Quick Action Button for Mobile Chat (Hidden on HOME) */}
+      {/* Admin Login Modal */}
+      {showAdminLogin && (
+        <AdminLogin 
+          onLoginSuccess={() => {
+            setIsAdminAuthenticated(true);
+            setShowAdminLogin(false);
+            setCurrentView(AppView.ADMIN);
+          }}
+          onCancel={() => setShowAdminLogin(false)}
+        />
+      )}
+
       {showSidebar && (
         <button 
           onClick={() => setCurrentView(AppView.CHAT)}

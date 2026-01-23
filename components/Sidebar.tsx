@@ -45,16 +45,25 @@ const Sidebar: React.FC<SidebarProps> = ({ currentView, setView }) => {
         ))}
       </nav>
 
-      <div className="p-6">
+      <div className="p-4 space-y-2">
+        {/* Admin Link at the bottom */}
+        <button
+          onClick={() => setView(AppView.ADMIN)}
+          className={`w-full flex items-center gap-3 px-4 py-2 rounded-xl text-xs transition-all ${
+            currentView === AppView.ADMIN ? 'bg-slate-800 text-white' : 'text-slate-400 hover:bg-slate-100'
+          }`}
+        >
+          <span>🔐</span>
+          <span className="font-bold uppercase tracking-wider">لوحة الإدارة</span>
+        </button>
+
         <div className="bg-gradient-to-br from-indigo-50 to-purple-50 p-4 rounded-2xl border border-indigo-100">
           <div className="flex justify-between items-center mb-1">
              <p className="text-xs text-indigo-800 font-bold">نقاط التميز: 1250</p>
-             <span className="text-[8px] bg-emerald-100 text-emerald-700 px-1 rounded">Backend Sync</span>
           </div>
           <div className="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
             <div className="bg-indigo-600 h-full w-3/4"></div>
           </div>
-          <p className="text-[10px] text-slate-500 mt-2 text-center">بقي القليل للمستوى الذهبي!</p>
         </div>
       </div>
     </aside>

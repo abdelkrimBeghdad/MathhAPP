@@ -21,7 +21,15 @@
         border: 1px solid rgba(255, 255, 255, 0.3);
       }
       
-      /* --- هندسة الكسور الرياضية الفائقة --- */
+      @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-5px); }
+        75% { transform: translateX(5px); }
+      }
+      .animate-shake {
+        animation: shake 0.2s ease-in-out 0s 2;
+      }
+
       .math-fraction {
         display: inline-flex;
         flex-direction: column;
@@ -42,7 +50,6 @@
         width: 100%;
       }
       
-      /* خط الكسر الأفقي الصريح */
       .math-fraction .frac-line {
         width: 100%;
         height: 1.5px;
@@ -61,7 +68,6 @@
         width: 100%;
       }
 
-      /* --- هندسة الجذور التربيعية (نظام SVG المتصل) --- */
       .math-root {
         display: inline-flex;
         align-items: flex-start;
@@ -89,7 +95,6 @@
         white-space: nowrap;
       }
 
-      /* تحسينات القراءة لمنع تداخل الجذور مع الأسطر */
       .prose p {
         line-height: 2.8; 
         margin-bottom: 2rem;

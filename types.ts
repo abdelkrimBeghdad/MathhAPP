@@ -6,12 +6,14 @@ export enum AppView {
   EXERCISES = 'EXERCISES',
   PROGRESS = 'PROGRESS',
   FORMULAS = 'FORMULAS',
-  LESSON_DETAIL = 'LESSON_DETAIL'
+  LESSON_DETAIL = 'LESSON_DETAIL',
+  ADMIN = 'ADMIN'
 }
 
 export type VisualizationType = 'THALES' | 'TRIGONOMETRY' | 'COORDINATES' | 'PGCD_VISUAL';
 
 export interface LessonContent {
+  id?: number;
   subtitle: string;
   explanation: string;
   visualization?: VisualizationType;
