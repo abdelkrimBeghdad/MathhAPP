@@ -42,16 +42,16 @@ const LessonDetail: React.FC<LessonDetailProps> = ({ chapter, onBack }) => {
           <div className="space-y-4 text-right">
             <button 
               onClick={onBack}
-              className="bg-white/20 hover:bg-white/30 backdrop-blur-md px-4 py-2 rounded-xl text-sm font-bold transition-all mb-4"
+              className="bg-white/20 hover:bg-white/30 backdrop-blur-md px-6 py-2 rounded-xl text-sm font-black transition-all mb-4 border border-white/20"
             >
-              ➡️ العودة للمنهاج
+              ➡️ العودة للمنهاج الرسمي
             </button>
             <div className="flex items-center gap-6 justify-end">
               <div className="text-right">
                 <h1 className="text-4xl md:text-5xl font-black mb-2 tracking-tight">{chapter.title}</h1>
-                <p className="text-white/80 text-lg md:text-xl max-w-2xl">{chapter.description}</p>
+                <p className="text-white/80 text-lg md:text-xl max-w-2xl font-bold">{chapter.description}</p>
               </div>
-              <div className="text-7xl bg-white/20 p-4 rounded-[2rem] backdrop-blur-lg shadow-2xl">
+              <div className="text-7xl bg-white/20 p-5 rounded-[2.5rem] backdrop-blur-lg shadow-2xl border border-white/10">
                 {chapter.icon}
               </div>
             </div>
@@ -62,20 +62,20 @@ const LessonDetail: React.FC<LessonDetailProps> = ({ chapter, onBack }) => {
       <div className="max-w-7xl mx-auto px-4 md:px-8 mt-12 grid grid-cols-1 lg:grid-cols-12 gap-12">
         <aside className="lg:col-span-3 hidden lg:block">
           <div className="sticky top-24 space-y-6">
-            <div className="bg-white rounded-3xl p-6 shadow-xl border border-slate-100">
-              <h3 className="font-black text-slate-800 mb-6 text-lg">📍 مسار الدرس</h3>
+            <div className="bg-white rounded-[2.5rem] p-8 shadow-xl border border-slate-100">
+              <h3 className="font-black text-slate-800 mb-6 text-lg border-b pb-4">📍 مسار الموارد المعرفية</h3>
               <div className="space-y-1 relative">
                 <div className="absolute right-[11px] top-4 bottom-4 w-0.5 bg-slate-100"></div>
                 {chapter.detailedContent.map((section, idx) => (
                   <button
                     key={idx}
                     onClick={() => scrollToSection(idx)}
-                    className={`w-full text-right py-3 pr-8 relative text-sm transition-all flex items-center group ${
-                      activeSection === idx ? 'text-indigo-600 font-bold' : 'text-slate-400'
+                    className={`w-full text-right py-4 pr-8 relative text-sm transition-all flex items-center group ${
+                      activeSection === idx ? 'text-indigo-600 font-black' : 'text-slate-400 font-bold'
                     }`}
                   >
-                    <div className={`absolute right-0 w-6 h-6 rounded-full border-4 border-white shadow-sm z-10 ${
-                      activeSection === idx ? 'bg-indigo-600' : 'bg-slate-200'
+                    <div className={`absolute right-0 w-6 h-6 rounded-full border-4 border-white shadow-sm z-10 transition-colors ${
+                      activeSection === idx ? 'bg-indigo-600' : 'bg-slate-200 group-hover:bg-indigo-200'
                     }`}></div>
                     {section.subtitle}
                   </button>
@@ -85,52 +85,73 @@ const LessonDetail: React.FC<LessonDetailProps> = ({ chapter, onBack }) => {
           </div>
         </aside>
 
-        <div className="lg:col-span-9 space-y-12">
+        <div className="lg:col-span-9 space-y-16">
           {chapter.detailedContent.map((section, idx) => (
             <section key={idx} id={`section-${idx}`} className="lesson-section scroll-mt-24">
-              <div className="bg-white rounded-[2.5rem] shadow-xl border border-slate-100 overflow-hidden">
-                <div className="p-8 md:p-10 flex items-start justify-between border-b border-slate-50 bg-slate-50/30">
+              <div className="bg-white rounded-[3rem] shadow-2xl border border-slate-100 overflow-hidden">
+                <div className="p-8 md:p-10 flex items-start justify-between border-b border-slate-50 bg-slate-50/50">
                   <div className="text-right space-y-2">
-                    <span className={`inline-block px-3 py-1 rounded-lg text-[10px] font-black text-white uppercase ${chapter.color}`}>
-                      المفهوم رقم {idx + 1}
+                    <span className={`inline-block px-4 py-1.5 rounded-full text-[10px] font-black text-white uppercase shadow-lg ${chapter.color}`}>
+                      المورد المعرفي رقم {idx + 1}
                     </span>
                     <h3 className="text-2xl md:text-3xl font-black text-slate-800">{section.subtitle}</h3>
                   </div>
                 </div>
 
-                <div className="p-8 md:p-12 space-y-10 text-right">
-                  <MathText text={section.explanation} className="prose max-w-none text-slate-600" />
+                <div className="p-8 md:p-12 space-y-12 text-right">
+                  {/* Explanation Section */}
+                  <div className="space-y-6">
+                     <div className="flex items-center gap-3 justify-end text-indigo-600">
+                        <h4 className="font-black text-xl">💡 شرح المورد (حوصلة)</h4>
+                        <span className="text-2xl">📘</span>
+                     </div>
+                     <div className="bg-slate-50 p-8 rounded-[2rem] border-r-8 border-indigo-500 shadow-inner">
+                        <MathText text={section.explanation} className="prose max-w-none text-slate-700 leading-loose text-lg font-medium" />
+                     </div>
+                  </div>
 
                   {section.visualization && (
                     <MathVisualizer type={section.visualization} colorClass={chapter.color} />
                   )}
 
+                  {/* Example & Solution Section */}
                   {section.example && (
-                    <div className="relative">
-                      <div className="bg-slate-900 rounded-[2rem] overflow-hidden shadow-2xl text-right">
-                        <div className="px-8 py-4 bg-white/5 border-b border-white/5 flex justify-between items-center">
-                          <span className="text-[10px] font-black text-slate-400 uppercase">نموذج الحل الوزاري</span>
-                          <div className="flex gap-2">
-                            <span className="w-3 h-3 rounded-full bg-red-400"></span>
-                            <span className="w-3 h-3 rounded-full bg-amber-400"></span>
-                            <span className="w-3 h-3 rounded-full bg-emerald-400"></span>
-                          </div>
+                    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4">
+                      <div className="flex items-center gap-3 justify-end text-emerald-600">
+                        <h4 className="font-black text-xl">📝 تطبيق وإعادة استثمار</h4>
+                        <span className="text-2xl">✍️</span>
+                      </div>
+                      
+                      <div className="grid grid-cols-1 gap-6">
+                        <div className="bg-white border-2 border-emerald-100 p-8 rounded-[2rem] shadow-sm relative overflow-hidden group">
+                           <div className="absolute top-0 left-0 w-2 h-full bg-emerald-500 opacity-20 group-hover:opacity-100 transition-opacity"></div>
+                           <h5 className="font-black text-emerald-700 mb-4 flex items-center gap-2 justify-end">
+                              <span>السؤال / الوضعية</span>
+                              <span className="w-2 h-2 bg-emerald-500 rounded-full"></span>
+                           </h5>
+                           <MathText text={section.example.problem} className="text-slate-800 text-xl font-bold leading-relaxed" />
                         </div>
-                        
-                        <div className="p-8 md:p-10 space-y-8">
-                          <div>
-                            <h4 className="text-amber-400 font-black text-lg mb-4">❓ تمرين تطبيقي:</h4>
-                            <MathText text={section.example.problem} className="text-slate-100 text-xl md:text-2xl font-bold" />
-                          </div>
-                          <div className="h-px bg-white/10 w-full"></div>
-                          <div>
-                            <h4 className="text-emerald-400 font-black text-lg mb-4">✅ الحل المفصل:</h4>
-                            <MathText text={section.example.solution} className="bg-emerald-500/5 border border-emerald-500/20 p-6 md:p-8 rounded-2xl text-emerald-50 text-xl leading-loose" />
-                          </div>
+
+                        <div className="bg-slate-900 p-8 rounded-[2rem] shadow-2xl relative">
+                           <div className="absolute top-4 left-6 flex gap-1.5">
+                              <span className="w-2.5 h-2.5 rounded-full bg-rose-500/50"></span>
+                              <span className="w-2.5 h-2.5 rounded-full bg-amber-500/50"></span>
+                              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500/50"></span>
+                           </div>
+                           <h5 className="font-black text-indigo-400 mb-6 flex items-center gap-2 justify-end border-b border-white/10 pb-4">
+                              <span>الحل النموذجي المقترح</span>
+                              <span className="w-2 h-2 bg-indigo-400 rounded-full"></span>
+                           </h5>
+                           <MathText text={section.example.solution} className="text-indigo-50 text-xl leading-loose font-bold" />
                         </div>
                       </div>
                     </div>
                   )}
+                </div>
+                
+                {/* Footer of lesson card */}
+                <div className="bg-slate-50 p-6 text-center border-t border-slate-100">
+                   <p className="text-slate-400 font-bold text-xs uppercase tracking-widest">نهاية المورد المعرفي - برافو يا بطل! 👏</p>
                 </div>
               </div>
             </section>
