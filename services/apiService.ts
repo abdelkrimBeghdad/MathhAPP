@@ -65,6 +65,7 @@ export const apiService = {
     const data = await safeFetch(`${API_BASE_URL}/exercises/${chapterId}`);
     if (data) return data;
 
+    // Fix: Using newly exported EXERCISES from constants
     const { EXERCISES } = await import('../constants');
     return EXERCISES.filter(ex => ex.chapterId === chapterId);
   },

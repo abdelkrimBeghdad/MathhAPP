@@ -13,15 +13,44 @@
         background-color: #f8fafc;
         scroll-behavior: smooth;
       }
-      .preserve-3d { transform-style: preserve-3d; }
-      .backface-hidden { backface-visibility: hidden; }
-      .glass-morphism {
-        background: rgba(255, 255, 255, 0.8);
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(12px);
-        border: 1px solid rgba(255, 255, 255, 0.3);
-      }
       .math-gradient { background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); }
+      
+      /* Lab Specific Styles */
+      .lab-grid {
+        background-image: radial-gradient(circle, #334155 1px, transparent 1px);
+        background-size: 30px 30px;
+      }
+      
+      /* Math Fraction Styling */
+      .math-fraction {
+        display: inline-flex;
+        flex-direction: column;
+        align-items: center;
+        vertical-align: middle;
+        margin: 0 4px;
+      }
+      .frac-line {
+        width: 100%;
+        height: 2px;
+        background: currentColor;
+        margin: 2px 0;
+      }
+      
+      /* Custom Scrollbar */
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+      @keyframes pulse-slow {
+        0%, 100% { opacity: 1; transform: scale(1); }
+        50% { opacity: 0.8; transform: scale(0.98); }
+      }
+      .animate-pulse-slow { animation: pulse-slow 3s infinite ease-in-out; }
+
+      /* Math symbol consistency */
+      .math-symbol {
+        font-family: 'Times New Roman', serif;
+        font-style: italic;
+      }
     </style>
   <script type="importmap">
 {

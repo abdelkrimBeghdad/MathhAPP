@@ -22,7 +22,8 @@ const AdminDashboard: React.FC = () => {
   const [newLesson, setNewLesson] = useState<Partial<LessonContent>>({
     subtitle: '',
     explanation: '',
-    example: { problem: '', solution: '' }
+    example: { problem: '', solution: '' },
+    isVisible: true
   });
 
   useEffect(() => {
@@ -43,7 +44,8 @@ const AdminDashboard: React.FC = () => {
       if (ch.id === selectedSegmentId) {
         const lesson: LessonContent = { 
           ...newLesson as LessonContent, 
-          id: `les_${Date.now()}` 
+          id: `les_${Date.now()}`,
+          isVisible: true
         };
         return {
           ...ch,
@@ -56,7 +58,7 @@ const AdminDashboard: React.FC = () => {
     setChapters(updatedChapters);
     localStorage.setItem('mathdz_chapters_db', JSON.stringify(updatedChapters));
     setIsAddingLesson(false);
-    setNewLesson({ subtitle: '', explanation: '', example: { problem: '', solution: '' } });
+    setNewLesson({ subtitle: '', explanation: '', example: { problem: '', solution: '' }, isVisible: true });
     alert("✅ تم بنجاح إضافة المورد المعرفي الجديد!");
   };
 
@@ -65,6 +67,22 @@ const AdminDashboard: React.FC = () => {
     const updated = chapters.map(ch => {
       if (ch.id === chapterId) {
         return { ...ch, detailedContent: ch.detailedContent.filter(l => l.id !== lessonId) };
+      }
+      return ch;
+    });
+    setChapters(updated);
+    localStorage.setItem('mathdz_chapters_db', JSON.stringify(updated));
+  };
+
+  const toggleVisibility = (chapterId: string, lessonId: string) => {
+    const updated = chapters.map(ch => {
+      if (ch.id === chapterId) {
+        return {
+          ...ch,
+          detailedContent: ch.detailedContent.map(l => 
+            l.id === lessonId ? { ...l, isVisible: l.isVisible === false ? true : false } : l
+          )
+        };
       }
       return ch;
     });
@@ -249,14 +267,23 @@ const AdminDashboard: React.FC = () => {
                                 <div key={les.id} className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex justify-between items-center group/item hover:border-indigo-200 transition-all">
                                    <div className="flex items-center gap-4">
                                       <span className="text-xl">📖</span>
-                                      <span className="font-black text-slate-700 text-sm leading-tight">{les.subtitle}</span>
+                                      <span className={`font-black text-sm leading-tight ${les.isVisible === false ? 'text-slate-300 line-through' : 'text-slate-700'}`}>{les.subtitle}</span>
                                    </div>
-                                   <button 
-                                     onClick={() => deleteLesson(ch.id, les.id!)}
-                                     className="w-10 h-10 rounded-2xl bg-rose-50 text-rose-500 opacity-0 group-hover/item:opacity-100 transition-opacity flex items-center justify-center hover:bg-rose-500 hover:text-white"
-                                   >
-                                      🗑️
-                                   </button>
+                                   <div className="flex gap-2">
+                                      <button 
+                                        onClick={() => toggleVisibility(ch.id, les.id!)}
+                                        className={`w-10 h-10 rounded-2xl flex items-center justify-center transition-all shadow-sm ${les.isVisible === false ? 'bg-amber-50 text-amber-500 hover:bg-amber-500 hover:text-white' : 'bg-emerald-50 text-emerald-500 hover:bg-emerald-500 hover:text-white'}`}
+                                        title={les.isVisible === false ? 'إظهار المورد' : 'إخفاء المورد'}
+                                      >
+                                        {les.isVisible === false ? '🔒' : '🔓'}
+                                      </button>
+                                      <button 
+                                        onClick={() => deleteLesson(ch.id, les.id!)}
+                                        className="w-10 h-10 rounded-2xl bg-rose-50 text-rose-500 opacity-0 group-hover/item:opacity-100 transition-opacity flex items-center justify-center hover:bg-rose-500 hover:text-white"
+                                      >
+                                          🗑️
+                                      </button>
+                                   </div>
                                 </div>
                               ))}
                               {ch.detailedContent.length === 0 && (
@@ -288,17 +315,14 @@ const AdminDashboard: React.FC = () => {
                     {students.map(st => (
                       <tr key={st.id} className="hover:bg-slate-50/50 transition-colors">
                          <td className="p-8">
-                            {/* Fixed: lastName does not exist on Student, using only firstName */}
                             <p className="font-black text-slate-800 text-lg">{st.firstName}</p>
                             <span className="text-[10px] font-black text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded">السنة {st.level} متوسط</span>
                          </td>
                          <td className="p-8">
-                            {/* Fixed: schoolName does not exist on Student, using title or placeholder */}
                             <p className="font-bold text-slate-600">{st.title || 'طالب متفوق'}</p>
                             <span className="text-xs text-slate-400 font-bold">ولاية: {st.wilaya}</span>
                          </td>
                          <td className="p-8 text-center">
-                            {/* Fixed: points does not exist on Student, using xp */}
                             <span className="font-black text-emerald-600 bg-emerald-50 px-5 py-2 rounded-2xl border border-emerald-100">{st.xp} XP</span>
                          </td>
                          <td className="p-8">

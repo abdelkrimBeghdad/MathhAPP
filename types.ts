@@ -15,7 +15,7 @@ export enum AppView {
 
 export type YearOfStudy = '1AM' | '2AM' | '3AM' | '4AM';
 export type MathField = 'NUMERICAL' | 'GEOMETRIC' | 'DATA_FUNCTIONS';
-export type VisualizationType = 'THALES' | 'TRIGONOMETRY' | 'COORDINATES' | 'PGCD_VISUAL';
+export type VisualizationType = 'THALES' | 'TRIGONOMETRY' | 'COORDINATES' | 'PGCD_VISUAL' | 'EXPANSION' | 'FACTORIZATION';
 
 export interface CommonMistake {
   title: string;
@@ -28,12 +28,15 @@ export interface LessonContent {
   id?: string;
   subtitle: string;
   explanation: string;
+  summary?: string; 
   visualization?: VisualizationType;
   commonMistakes?: CommonMistake[];
   example?: {
     problem: string;
     solution: string;
+    interactiveAnswer: string; // الجواب المتوقع للمقارنة اليدوية
   };
+  isVisible?: boolean;
 }
 
 export interface Chapter {
@@ -45,13 +48,13 @@ export interface Chapter {
   description: string;
   color: string;
   detailedContent: LessonContent[];
-  masteryLevel?: number; // 0 to 100
+  masteryLevel?: number;
 }
 
 export interface Flashcard {
   id: string;
   question: string;
-  answer: boolean; // True/False game
+  answer: boolean;
   explanation: string;
 }
 
